@@ -1,3 +1,5 @@
+import os.path
+
 import pygame
 
 pygame.init()
@@ -16,7 +18,8 @@ world = pygame.Surface((world_width, world_height))
 camera = pygame.Rect(0, 0, win_width, win_height)
 
 # Background
-bg = pygame.image.load('background/Untitled.png')
+bg = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Background', 'Untitled.png'))
+
 world.blit(bg,(0,0))
 
 # Mouse movement
@@ -44,6 +47,7 @@ if __name__ == '__main__':
             mouse_pos = pygame.mouse.get_pos()
             dx, dy = prev_mouse_pos[0] - mouse_pos[0] , prev_mouse_pos[1] - mouse_pos[1]
             camera.move_ip(dx,dy)
+            camera.clamp_ip(world.get_rect())
             prev_mouse_pos = mouse_pos
 
         win.blit(world.subsurface(camera), (0, 0))
