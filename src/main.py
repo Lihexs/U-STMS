@@ -13,8 +13,8 @@ win_height = 1200
 win = pygame.display.set_mode((win_width, win_height))
 
 # World view
-world_width = 3000
-world_height = 3000
+world_width = 3590
+world_height = 2252
 world = pygame.Surface((world_width, world_height))
 
 # Camera view
