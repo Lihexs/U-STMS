@@ -32,11 +32,8 @@ world.blit(bg,(0,0))
 dragging = False
 prev_mouse_pos = (0, 0)
 
-vehicleTypes = {0:'car', 1:'bus', 2:'truck', 3:'bike'}
-directionNumbers = {0:'right', 1:'down', 2:'left', 3:'up'}
-
-#Start coordinates
-rightCordStart = {{1590,830},{1590,876}}
+vehicleTypes = {0:'car', 1:'bus', 2:'truck', 3:'bike',4:'ambulance'}
+directionNumbers = {0:'right', 1:'down', 2:'left', 3:'up',4:'ambulance'}
 
 if __name__ == '__main__':
     running = True
@@ -51,7 +48,6 @@ if __name__ == '__main__':
                 if event.button == 1:
                     dragging = True
                     prev_mouse_pos = pygame.mouse.get_pos()
-                    print(f'World coordinate: {pygame.mouse.get_pos()}')
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     dragging = False
