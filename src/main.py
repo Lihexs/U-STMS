@@ -153,15 +153,7 @@ traffic_light_color8 = traffic_light_green
 
 # create a move function the given a vehicle and a direction it will move the vehicle in that direction
 # create a function that will create a vehicle and add it to the list of vehicles
-def move(vehicle, direction):
-    if direction == 'right':
-        vehicle.x += speed
-    elif direction == 'down':
-        vehicle.y += speed
-    elif direction == 'left':
-        vehicle.x -= speed
-    elif direction == 'up':
-        vehicle.y -= speed
+
 
 
 world.blit(bg, (0, 0))
@@ -178,9 +170,27 @@ direction_dict = {'right': (0, 1), 'down': (1, 0), 'left': (0, -1), 'up': (-1, 0
 
 
 
-class Vehicle(pygame.sprite.Sprite):
-    def __int__(self, lane, ):
+class Vehicle:
+    def __int__(self, position, speed, direction, traffic_light):
         pygame.sprite.Sprite.__init__(self)
+        self.position = position
+        self.speed = speed
+        self.direction = direction
+        self.traffic_light = traffic_light
+        self.stopped = False
+
+    def move(vehicle, direction):
+        if direction == 'right':
+            vehicle.x += speed
+        elif direction == 'down':
+            vehicle.y += speed
+        elif direction == 'left':
+            vehicle.x -= speed
+        elif direction == 'up':
+            vehicle.y -= speed
+    def within_buffer_move(self, buffer_size):
+        dist = ((self.position[0] - traffic_light.get_position()[0]) ** 2 + (self.position[0] - traffic_light.get_position()[1]) ** 2) ** 0.5
+        return dist <= buffer_size
 
 # Start coordinates
 rightCordStart = [[1590, 830], [1590, 876], [1590, 496], [1590, 1590, 549], [1590, 235], [1590, 278]]
