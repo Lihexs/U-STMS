@@ -47,6 +47,18 @@ truck_up = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file
 
 speed = 10
 
+# create a move function the given a vehicle and a direction it will move the vehicle in that direction
+# create a function that will create a vehicle and add it to the list of vehicles
+def move(vehicle, direction):
+    if direction == 'right':
+        vehicle.x += speed
+    elif direction == 'down':
+        vehicle.y += speed
+    elif direction == 'left':
+        vehicle.x -= speed
+    elif direction == 'up':
+        vehicle.y -= speed
+
 
 
 world.blit(bg, (0, 0))
@@ -55,8 +67,48 @@ world.blit(bg, (0, 0))
 dragging = False
 prev_mouse_pos = (0, 0)
 
-vehicleTypes = {0: 'car', 1: 'bus', 2: 'truck', 3: 'bike'}
-directionNumbers = {0: 'right', 1: 'down', 2: 'left', 3: 'up'}
+vehicle_types = ['bike', 'bus', 'car', 'truck']
+direction_dict = {'right': (0, 1), 'down': (1, 0), 'left': (0, -1), 'up': (-1, 0)}
+
+# create a function that creates a new vehicle pygame object
+def create_vehicle(vehicle_type, direction, position):
+    if vehicle_type == 'bike':
+        if direction == 'right':
+            world.blit(bike_right, position)
+        elif direction == 'down':
+            world.blit(bike_down, position)
+        elif direction == 'left':
+            world.blit(bike_left, position)
+        elif direction == 'up':
+            world.blit(bike_up, position)
+    elif vehicle_type == 'bus':
+        if direction == 'right':
+            world.blit(bus_right, position)
+        elif direction == 'down':
+            world.blit(bus_down, position)
+        elif direction == 'left':
+            world.blit(bus_left, position)
+        elif direction == 'up':
+            world.blit(bus_up, position)
+    elif vehicle_type == 'car':
+        if direction == 'right':
+            world.blit(car_right, position)
+        elif direction == 'down':
+            world.blit(car_down, position)
+        elif direction == 'left':
+            world.blit(car_left, position)
+        elif direction == 'up':
+            world.blit(car_up, position)
+    elif vehicle_type == 'truck':
+        if direction == 'right':
+            world.blit(truck_right, position)
+        elif direction == 'down':
+            world.blit(truck_down, position)
+        elif direction == 'left':
+            world.blit(truck_left, position)
+        elif direction == 'up':
+            world.blit(truck_up, position)
+
 
 # Start coordinates
 rightCordStart = [[1590, 830], [1590, 876], [1590, 496], [1590, 1590, 549], [1590, 235], [1590, 278]]
