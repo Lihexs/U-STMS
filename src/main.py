@@ -97,29 +97,46 @@ int(traffic_light_yellow.get_width() * scale_tl), int(traffic_light_yellow.get_h
 speed = 10
 #Traffic Light class
 class Traffic_Light:
-    def __init__(self, position, color_sequence, timer):
+    def __init__(self, position, color):
         self.position = position
-        self.color_sequence = color_sequence
-        self.timer = timer
-        self.current_color_index = 0
+        self.color = color
+        self.time = 0
 
-    def update(self):
-        if self.timer.has_expired():
-            self.timer.reset()
-            self.current_color_index = (self.current_color_index + 1) % len(self.color_sequence)
+    def set_color(self, color):
+        self.color = color
 
-    @property
-    def current_color(self):
-        return self.color_sequence[self.current_color_index]
-# create an object for a traffic light
-traffic_light1 = pygame.Rect(945, 70, 25, 55)
-traffic_light2 = pygame.Rect(1130, 75, 25, 55)
-traffic_light3 = pygame.Rect(945, 290, 25, 55)
-traffic_light4 = pygame.Rect(945, 670, 25, 55)
-traffic_light5 = pygame.Rect(1130, 295, 25, 55)
-traffic_light6 = pygame.Rect(1130, 670, 25, 55)
-traffic_light7 = pygame.Rect(945, 450, 25, 55)
-traffic_light8 = pygame.Rect(1130, 450, 25, 55)
+    def reset_time(self):
+        self.time = 0
+
+    def update_time(self):
+        self.time += 1
+
+    def get_time(self):
+        return self.time
+
+    def get_color(self):
+        return self.color
+
+    def get_position(self):
+        return self.position
+
+# create traffic lights objects
+# 0 - red, 1 - yellow, 2 - green
+traffic_light1 = Traffic_Light((945, 70), 0)
+traffic_light2 = Traffic_Light((1130, 75), 0)
+traffic_light3 = Traffic_Light((945, 290), 0)
+traffic_light4 = Traffic_Light((945, 670), 0)
+traffic_light5 = Traffic_Light((1130, 295), 0)
+traffic_light6 = Traffic_Light((1130, 670), 0)
+traffic_light7 = Traffic_Light((945, 450), 0)
+traffic_light8 = Traffic_Light((1130, 450), 0)
+
+traffic_lights = [traffic_light1, traffic_light2, traffic_light3, traffic_light4, traffic_light5, traffic_light6,
+                  traffic_light7, traffic_light8]
+
+# create the traffic lights as objects
+
+
 
 
 traffic_light_color1 = traffic_light_green
@@ -157,54 +174,16 @@ vehicle_types = ['bike', 'bus', 'car', 'truck']
 direction_dict = {'right': (0, 1), 'down': (1, 0), 'left': (0, -1), 'up': (-1, 0)}
 
 
-# create a function that creates a new vehicle pygame object
-def create_vehicle(vehicle_type, direction, position):
-    if vehicle_type == 'bike':
-        if direction == 'right':
-            world.blit(bike_right, position)
-        elif direction == 'down':
-            world.blit(bike_down, position)
-        elif direction == 'left':
-            world.blit(bike_left, position)
-        elif direction == 'up':
-            world.blit(bike_up, position)
-    elif vehicle_type == 'bus':
-        if direction == 'right':
-            world.blit(bus_right, position)
-        elif direction == 'down':
-            world.blit(bus_down, position)
-        elif direction == 'left':
-            world.blit(bus_left, position)
-        elif direction == 'up':
-            world.blit(bus_up, position)
-    elif vehicle_type == 'car':
-        if direction == 'right':
-            world.blit(car_right, position)
-        elif direction == 'down':
-            world.blit(car_down, position)
-        elif direction == 'left':
-            world.blit(car_left, position)
-        elif direction == 'up':
-            world.blit(car_up, position)
-    elif vehicle_type == 'truck':
-        if direction == 'right':
-            world.blit(truck_right, position)
-        elif direction == 'down':
-            world.blit(truck_down, position)
-        elif direction == 'left':
-            world.blit(truck_left, position)
-        elif direction == 'up':
-            world.blit(truck_up, position)
 
 
-# Start coordinates
-rightCordStart = [[1590, 830], [1590, 876], [1590, 496], [1590, 1590, 549], [1590, 235], [1590, 278]]
 
 
 class Vehicle(pygame.sprite.Sprite):
     def __int__(self, lane, ):
         pygame.sprite.Sprite.__init__(self)
 
+# Start coordinates
+rightCordStart = [[1590, 830], [1590, 876], [1590, 496], [1590, 1590, 549], [1590, 235], [1590, 278]]
 
 if __name__ == '__main__':
     running = True
@@ -235,13 +214,23 @@ if __name__ == '__main__':
 
         win.blit(world.subsurface(camera), (0, 0))
         # blit the traffic light
-        win.blit(traffic_light_color1, (traffic_light1.x, traffic_light1.y))
-        win.blit(traffic_light_color2, (traffic_light2.x, traffic_light2.y))
-        win.blit(traffic_light_color3, (traffic_light3.x, traffic_light3.y))
-        win.blit(traffic_light_color4, (traffic_light4.x, traffic_light4.y))
-        win.blit(traffic_light_color5, (traffic_light5.x, traffic_light5.y))
-        win.blit(traffic_light_color6, (traffic_light6.x, traffic_light6.y))
-        win.blit(traffic_light_color7, (traffic_light7.x, traffic_light7.y))
-        win.blit(traffic_light_color8, (traffic_light8.x, traffic_light8.y))
+        # win.blit(traffic_light_color1, (traffic_light1.x, traffic_light1.y))
+        # win.blit(traffic_light_color2, (traffic_light2.x, traffic_light2.y))
+        # win.blit(traffic_light_color3, (traffic_light3.x, traffic_light3.y))
+        # win.blit(traffic_light_color4, (traffic_light4.x, traffic_light4.y))
+        # win.blit(traffic_light_color5, (traffic_light5.x, traffic_light5.y))
+        # win.blit(traffic_light_color6, (traffic_light6.x, traffic_light6.y))
+        # win.blit(traffic_light_color7, (traffic_light7.x, traffic_light7.y))
+        # win.blit(traffic_light_color8, (traffic_light8.x, traffic_light8.y))
+        for traffic_light in traffic_lights:
+            if traffic_light.get_color() == 0:
+                win.blit(traffic_light_red, traffic_light.get_position())
+            elif traffic_light.color == 2:
+                win.blit(traffic_light_green, traffic_light.get_position())
+            elif traffic_light.color == 1:
+                win.blit(traffic_light_yellow, traffic_light.get_position())
+        # blit the vehicles
+        # for vehicle in vehicles:
+        #     pass
 
         pygame.display.flip()
