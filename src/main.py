@@ -20,7 +20,7 @@ world = pygame.Surface((world_width, world_height))
 
 bg = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Background', 'intersection.png')) \
 
-scale = 0.5
+scale = 0.8
 scale_tl = 0.6
 
 bg = pygame.transform.scale(bg, (win_width * scale, win_height * scale))
