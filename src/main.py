@@ -36,7 +36,7 @@ vehicleTypes = {0:'car', 1:'bus', 2:'truck', 3:'bike'}
 directionNumbers = {0:'right', 1:'down', 2:'left', 3:'up'}
 
 #Start coordinates
-rightCordStart = {{1590,830},{1590,876}}
+rightCordStart = [[1590,830],[1590,876],[1590,496],[1590,1590,549],[1590,235],[1590,278]]
 
 if __name__ == '__main__':
     running = True
