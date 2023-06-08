@@ -1,12 +1,15 @@
 import os.path
-
+import random
+import time
+import threading
+import sys
 import pygame
 
 pygame.init()
 
 # Window view
-win_width = 800
-win_height = 600
+win_width = 1600
+win_height = 1200
 win = pygame.display.set_mode((win_width, win_height))
 
 # World view
@@ -18,7 +21,8 @@ world = pygame.Surface((world_width, world_height))
 camera = pygame.Rect(0, 0, win_width, win_height)
 
 # Background
-bg = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Background', 'Untitled.png'))
+bg = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Background', 'intersection.png'))
+
 
 world.blit(bg,(0,0))
 
@@ -26,6 +30,8 @@ world.blit(bg,(0,0))
 dragging = False
 prev_mouse_pos = (0, 0)
 
+vehicleTypes = {0:'car', 1:'bus', 2:'truck', 3:'bike'}
+directionNumbers = {0:'right', 1:'down', 2:'left', 3:'up'}
 
 if __name__ == '__main__':
     running = True
