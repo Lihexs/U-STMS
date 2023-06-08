@@ -8,6 +8,13 @@ import pyautogui
 
 pygame.init()
 
+scale = 1.5
+scale_tl = 0.85
+
+speed = 10
+
+buffer_size = 5
+
 # Window view
 win_width = 1920
 win_height = 1080
@@ -18,17 +25,14 @@ world_width = 3590
 world_height = 2252
 world = pygame.Surface((world_width, world_height))
 
-bg = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Background', 'intersection.png')) \
-
-scale = 1.5
-scale_tl = 0.85
+bg = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Background', 'intersection.png'))
 
 bg = pygame.transform.scale(bg, (win_width * scale, win_height * scale))
 
 # Camera view
 camera = pygame.Rect(0, 0, win_width, win_height)
 
-# Background
+world.blit(bg, (0, 0))
 
 # load all the images
 bike_down = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Vehicles', 'down', 'bike.png'))
@@ -88,18 +92,20 @@ truck_right = pygame.transform.scale(truck_right,
 truck_up = pygame.transform.scale(truck_up, (int(truck_up.get_width() * scale), int(truck_up.get_height() * scale)))
 
 traffic_light_green = pygame.transform.scale(traffic_light_green, (
-int(traffic_light_green.get_width() * scale_tl), int(traffic_light_green.get_height() * scale_tl)))
+    int(traffic_light_green.get_width() * scale_tl), int(traffic_light_green.get_height() * scale_tl)))
 traffic_light_red = pygame.transform.scale(traffic_light_red, (
-int(traffic_light_red.get_width() * scale_tl), int(traffic_light_red.get_height() * scale_tl)))
+    int(traffic_light_red.get_width() * scale_tl), int(traffic_light_red.get_height() * scale_tl)))
 traffic_light_yellow = pygame.transform.scale(traffic_light_yellow, (
-int(traffic_light_yellow.get_width() * scale_tl), int(traffic_light_yellow.get_height() * scale_tl)))
+    int(traffic_light_yellow.get_width() * scale_tl), int(traffic_light_yellow.get_height() * scale_tl)))
 
-speed = 10
-#Traffic Light class
+
+# Traffic Light class
 class Traffic_Light:
-    def __init__(self, position, color):
+    def __init__(self, position, color, arrival_direction, starting_coords):
         self.position = position
         self.color = color
+        self.arrival_direction = arrival_direction
+        self.starting_coords = starting_coords
         self.time = 0
 
     def set_color(self, color):
@@ -120,43 +126,37 @@ class Traffic_Light:
     def get_position(self):
         return self.position
 
+    def get_arrival_direction(self):
+        return self.arrival_direction
+
+    def get_starting_coords(self):
+        return self.starting_coords
+
+    def set_starting_coords(self, starting_coords):
+        self.starting_coords = starting_coords
+
+
 # create traffic lights objects
 # 0 - red, 1 - yellow, 2 - green
-traffic_light1 = Traffic_Light((945, 70), 0)
-traffic_light2 = Traffic_Light((1130, 75), 0)
-traffic_light3 = Traffic_Light((945, 290), 0)
-traffic_light4 = Traffic_Light((945, 670), 0)
-traffic_light5 = Traffic_Light((1130, 295), 0)
-traffic_light6 = Traffic_Light((1130, 670), 0)
-traffic_light7 = Traffic_Light((945, 450), 0)
-traffic_light8 = Traffic_Light((1130, 450), 0)
+# 0 - left, 1 - right, 2 - up, 3 - down
+traffic_light1 = Traffic_Light((945, 70), 0, 3, (994, -50))
+traffic_light2 = Traffic_Light((945, 290), 0, 1, (-50, 230))
+traffic_light3 = Traffic_Light((945, 450), 0, 3, None)
+traffic_light4 = Traffic_Light((945, 670), 0, 1, (-50, 602))
+traffic_light5 = Traffic_Light((1130, 75), 0, 0, (1570, 173))
+traffic_light6 = Traffic_Light((1130, 295), 0, 2, None)
+traffic_light7 = Traffic_Light((1130, 450), 0, 0, (1570, 544))
+traffic_light8 = Traffic_Light((1130, 670), 0, 2, (1076, 1000))
+
+# coords 0 direction - up
+# coords 1 direction - down
+# coords 2 direction - left
+# coords 3 direction - right
+# coords 4 direction - left
+# coords 5 direction - right
 
 traffic_lights = [traffic_light1, traffic_light2, traffic_light3, traffic_light4, traffic_light5, traffic_light6,
                   traffic_light7, traffic_light8]
-
-# create the traffic lights as objects
-
-
-
-
-traffic_light_color1 = traffic_light_green
-traffic_light_color2 =traffic_light_green
-traffic_light_color3 = traffic_light_green
-traffic_light_color4 = traffic_light_green
-traffic_light_color5 = traffic_light_green
-traffic_light_color6 = traffic_light_green
-traffic_light_color7 = traffic_light_green
-traffic_light_color8 = traffic_light_green
-
-
-# configure the traffic light to the red sprite
-
-# create a move function the given a vehicle and a direction it will move the vehicle in that direction
-# create a function that will create a vehicle and add it to the list of vehicles
-
-
-
-world.blit(bg, (0, 0))
 
 # Mouse movement
 dragging = False
@@ -166,34 +166,92 @@ vehicle_types = ['bike', 'bus', 'car', 'truck']
 direction_dict = {'right': (0, 1), 'down': (1, 0), 'left': (0, -1), 'up': (-1, 0)}
 
 
-
-
-
-
 class Vehicle:
-    def __int__(self, position, speed, direction, traffic_light):
+    def __init__(self, speed, traffic_light, type):
         pygame.sprite.Sprite.__init__(self)
+        self.passengers = 0
+        if type == 1:
+            self.passengers = random.randint(0, 50)
         self.position = position
+        self.type = type
         self.speed = speed
-        self.direction = direction
+        self.direction = traffic_light.arrival_direction
         self.traffic_light = traffic_light
         self.stopped = False
 
-    def move(vehicle, direction):
+    def get_position(self):
+        return self.position
+
+    def get_speed(self):
+        return self.speed
+
+    def get_direction(self):
+        return self.direction
+
+    def get_position(self):
+        return self.position
+
+    def set_position(self, position):
+        self.position = position
+
+    def set_speed(self, speed):
+        self.speed = speed
+
+    def set_direction(self, direction):
+        self.direction = direction
+
+    def move(self, direction):
         if direction == 'right':
-            vehicle.x += speed
+            position_x = self.get_position()[0] + speed
+            position_y = self.get_position()[1]
+            position = (position_x, position_y)
+            self.set_position(position)
         elif direction == 'down':
-            vehicle.y += speed
+            position_x = self.get_position()[0]
+            position_y = self.get_position()[1] + speed
+            position = (position_x, position_y)
+            self.set_position(position)
         elif direction == 'left':
-            vehicle.x -= speed
+            position_x = self.get_position()[0] - speed
+            position_y = self.get_position()[1]
+            position = (position_x, position_y)
+            self.set_position(position)
         elif direction == 'up':
-            vehicle.y -= speed
+            position_x = self.get_position()[0]
+            position_y = self.get_position()[1] - speed
+            position = (position_x, position_y)
+            self.set_position(position)
+
     def within_buffer_move(self, buffer_size):
-        dist = ((self.position[0] - traffic_light.get_position()[0]) ** 2 + (self.position[0] - traffic_light.get_position()[1]) ** 2) ** 0.5
+        dist = ((self.position[0] - traffic_light.get_position()[0]) ** 2 + (
+                self.position[0] - traffic_light.get_position()[1]) ** 2) ** 0.5
         return dist <= buffer_size
 
-# Start coordinates
-rightCordStart = [[1590, 830], [1590, 876], [1590, 496], [1590, 1590, 549], [1590, 235], [1590, 278]]
+
+# 0 - left, 1 - right, 2 - up, 3 - down
+# 0 - car, 1 - bus, 2 - truck, 3 - bike, 4 - ambulance
+
+
+car1 = Vehicle(speed, traffic_light1, 0)
+car2 = Vehicle(speed, traffic_light2, 0)
+car3 = Vehicle(speed, traffic_light3, 0)
+car4 = Vehicle(speed, traffic_light4, 0)
+car5 = Vehicle(speed, traffic_light5, 1)
+car6 = Vehicle(speed, traffic_light6, 1)
+car7 = Vehicle(speed, traffic_light7, 1)
+car8 = Vehicle(speed, traffic_light8, 1)
+car9 = Vehicle(speed, traffic_light1, 2)
+car10 = Vehicle(speed, traffic_light2, 2)
+car11 = Vehicle(speed, traffic_light3, 2)
+car12 = Vehicle(speed, traffic_light4, 2)
+car13 = Vehicle(speed, traffic_light5, 3)
+car14 = Vehicle(speed, traffic_light6, 3)
+car15 = Vehicle(speed, traffic_light7, 3)
+car16 = Vehicle(speed, traffic_light8, 3)
+car17 = Vehicle(speed, traffic_light1, 4)
+car18 = Vehicle(speed, traffic_light2, 4)
+car19 = Vehicle(speed, traffic_light3, 4)
+car20 = Vehicle(speed, traffic_light4, 4)
 
 if __name__ == '__main__':
     running = True
@@ -223,15 +281,8 @@ if __name__ == '__main__':
             prev_mouse_pos = mouse_pos
 
         win.blit(world.subsurface(camera), (0, 0))
-        # blit the traffic light
-        # win.blit(traffic_light_color1, (traffic_light1.x, traffic_light1.y))
-        # win.blit(traffic_light_color2, (traffic_light2.x, traffic_light2.y))
-        # win.blit(traffic_light_color3, (traffic_light3.x, traffic_light3.y))
-        # win.blit(traffic_light_color4, (traffic_light4.x, traffic_light4.y))
-        # win.blit(traffic_light_color5, (traffic_light5.x, traffic_light5.y))
-        # win.blit(traffic_light_color6, (traffic_light6.x, traffic_light6.y))
-        # win.blit(traffic_light_color7, (traffic_light7.x, traffic_light7.y))
-        # win.blit(traffic_light_color8, (traffic_light8.x, traffic_light8.y))
+
+        # blit the traffic lights
         for traffic_light in traffic_lights:
             if traffic_light.get_color() == 0:
                 win.blit(traffic_light_red, traffic_light.get_position())
