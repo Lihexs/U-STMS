@@ -41,7 +41,8 @@ rightCordStart = [[1590,830],[1590,876],[1590,496],[1590,1590,549],[1590,235],[1
 class Vehicle(pygame.sprite.Sprite):
     def __int__(self, lane,):
         pygame.sprite.Sprite.__init__(self)
-
+class TrafficLight:
+    def __int__(self):
 
 if __name__ == '__main__':
     running = True
