@@ -26,6 +26,7 @@ camera = pygame.Rect(0, 0, win_width, win_height)
 bg = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Background', 'intersection.png'))
 
 
+
 world.blit(bg,(0,0))
 
 # Mouse movement
