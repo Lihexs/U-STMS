@@ -95,7 +95,22 @@ traffic_light_yellow = pygame.transform.scale(traffic_light_yellow, (
 int(traffic_light_yellow.get_width() * scale_tl), int(traffic_light_yellow.get_height() * scale_tl)))
 
 speed = 10
+#Traffic Light class
+class Traffic_Light:
+    def __init__(self, position, color_sequence, timer):
+        self.position = position
+        self.color_sequence = color_sequence
+        self.timer = timer
+        self.current_color_index = 0
 
+    def update(self):
+        if self.timer.has_expired():
+            self.timer.reset()
+            self.current_color_index = (self.current_color_index + 1) % len(self.color_sequence)
+
+    @property
+    def current_color(self):
+        return self.color_sequence[self.current_color_index]
 # create an object for a traffic light
 traffic_light1 = pygame.Rect(945, 70, 25, 55)
 traffic_light2 = pygame.Rect(1130, 75, 25, 55)
