@@ -9,9 +9,9 @@ import pyautogui
 pygame.init()
 
 # Window view
-win_width = 3590
-win_height = 2252
-win = pygame.display.set_mode((win_width, win_height))
+win_width = 1920
+win_height = 1080
+win = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 # World view
 world_width = 3590
@@ -20,8 +20,8 @@ world = pygame.Surface((world_width, world_height))
 
 bg = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Background', 'intersection.png')) \
 
-scale = 0.8
-scale_tl = 0.6
+scale = 1.5
+scale_tl = 0.85
 
 bg = pygame.transform.scale(bg, (win_width * scale, win_height * scale))
 
@@ -97,26 +97,15 @@ int(traffic_light_yellow.get_width() * scale_tl), int(traffic_light_yellow.get_h
 speed = 10
 
 # create an object for a traffic light
-traffic_light1 = pygame.Rect(590, 50, 25, 55)
-traffic_light2 = pygame.Rect(705, 50, 25, 55)
-traffic_light3 = pygame.Rect(590, 205, 25, 55)
-traffic_light4 = pygame.Rect(708, 205, 25, 55)
-traffic_light5 = pygame.Rect(598, 470, 25, 55)
-traffic_light6 = pygame.Rect(707, 470, 25, 55)
-traffic_light7 = pygame.Rect(588, 770, 25, 55)
-traffic_light8 = pygame.Rect(704, 770, 25, 55)
-traffic_light9 = pygame.Rect(1269, 50, 25, 55)
-traffic_light10 = pygame.Rect(1381, 50, 25, 55)
-traffic_light11 = pygame.Rect(1256, 202, 25, 55)
-traffic_light12 = pygame.Rect(1263, 470, 25, 55)
-traffic_light13 = pygame.Rect(1384, 470, 25, 55)
-traffic_light14 = pygame.Rect(1385, 315, 25, 55)
-traffic_light15 = pygame.Rect(1381, 615, 25, 55)
-traffic_light16 = pygame.Rect(1383, 775, 25, 55)
-traffic_light17 = pygame.Rect(1269, 615, 25, 55)
-traffic_light18 = pygame.Rect(588, 605, 25, 55)
-traffic_light19 = pygame.Rect(588, 296, 25, 55)
-traffic_light20 = pygame.Rect(707, 302, 25, 55)
+traffic_light1 = pygame.Rect(945, 70, 25, 55)
+traffic_light2 = pygame.Rect(1130, 75, 25, 55)
+traffic_light3 = pygame.Rect(945, 290, 25, 55)
+traffic_light4 = pygame.Rect(945, 670, 25, 55)
+traffic_light5 = pygame.Rect(1130, 295, 25, 55)
+traffic_light6 = pygame.Rect(1130, 670, 25, 55)
+traffic_light7 = pygame.Rect(945, 450, 25, 55)
+traffic_light8 = pygame.Rect(1130, 450, 25, 55)
+
 
 traffic_light_color1 = traffic_light_green
 traffic_light_color2 =traffic_light_green
@@ -126,18 +115,6 @@ traffic_light_color5 = traffic_light_green
 traffic_light_color6 = traffic_light_green
 traffic_light_color7 = traffic_light_green
 traffic_light_color8 = traffic_light_green
-traffic_light_color9 = traffic_light_green
-traffic_light_color10 = traffic_light_green
-traffic_light_color11 = traffic_light_green
-traffic_light_color12 = traffic_light_green
-traffic_light_color13 = traffic_light_green
-traffic_light_color14 = traffic_light_green
-traffic_light_color15 = traffic_light_green
-traffic_light_color16 = traffic_light_green
-traffic_light_color17 = traffic_light_green
-traffic_light_color18 = traffic_light_green
-traffic_light_color19 = traffic_light_green
-traffic_light_color20 = traffic_light_green
 
 
 # configure the traffic light to the red sprite
@@ -251,17 +228,5 @@ if __name__ == '__main__':
         win.blit(traffic_light_color6, (traffic_light6.x, traffic_light6.y))
         win.blit(traffic_light_color7, (traffic_light7.x, traffic_light7.y))
         win.blit(traffic_light_color8, (traffic_light8.x, traffic_light8.y))
-        win.blit(traffic_light_color9, (traffic_light9.x, traffic_light9.y))
-        win.blit(traffic_light_color10, (traffic_light10.x, traffic_light10.y))
-        win.blit(traffic_light_color11, (traffic_light11.x, traffic_light11.y))
-        win.blit(traffic_light_color12, (traffic_light12.x, traffic_light12.y))
-        win.blit(traffic_light_color13, (traffic_light13.x, traffic_light13.y))
-        win.blit(traffic_light_color14, (traffic_light14.x, traffic_light14.y))
-        win.blit(traffic_light_color15, (traffic_light15.x, traffic_light15.y))
-        win.blit(traffic_light_color16, (traffic_light16.x, traffic_light16.y))
-        win.blit(traffic_light_color17, (traffic_light17.x, traffic_light17.y))
-        win.blit(traffic_light_color18, (traffic_light18.x, traffic_light18.y))
-        win.blit(traffic_light_color19, (traffic_light19.x, traffic_light19.y))
-        win.blit(traffic_light_color20, (traffic_light20.x, traffic_light20.y))
 
         pygame.display.flip()
