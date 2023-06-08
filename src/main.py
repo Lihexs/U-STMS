@@ -107,6 +107,13 @@ class Traffic_Light:
         self.arrival_direction = arrival_direction
         self.starting_coords = starting_coords
         self.time = 0
+        self.vehicles = [] # Vehicle list of the traffic light lane
+
+    def add_vehicle(self, vehicle):
+        self.vehicles.append(vehicle)
+
+    def pop_vehicle(self):
+        return self.vehicles.pop(0)
 
     def set_color(self, color):
         self.color = color
@@ -172,11 +179,11 @@ class Vehicle:
         self.passengers = 0
         if type == 1:
             self.passengers = random.randint(0, 50)
-        self.position = position
         self.type = type
         self.speed = speed
         self.direction = traffic_light.arrival_direction
         self.traffic_light = traffic_light
+        traffic_light.add_vehicle(self)
         self.stopped = False
 
     def get_position(self):
@@ -201,6 +208,9 @@ class Vehicle:
         self.direction = direction
 
     def move(self, direction):
+        if (direction == 'right' or direction == 'left') and self.traffic_light.color == 0 and abs(self.traffic_light.get_position()[1] - self.get_position()[1] < 1):
+            self.stopped = True
+        if direction == 'up' and self.traffic_light.color == 0 and abs(self.traffic_light.get_position())
         if direction == 'right':
             position_x = self.get_position()[0] + speed
             position_y = self.get_position()[1]
