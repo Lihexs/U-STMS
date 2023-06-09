@@ -100,6 +100,17 @@ truck_right = pygame.transform.scale(truck_right,
                                      (int(truck_right.get_width() * scale), int(truck_right.get_height() * scale)))
 truck_up = pygame.transform.scale(truck_up, (int(truck_up.get_width() * scale), int(truck_up.get_height() * scale)))
 
+
+ambulance_down = pygame.transform.scale(ambulance_down,
+                                    (int(ambulance_down.get_width() * 2*scale), int(ambulance_down.get_height() * 2*scale)))
+ambulance_left = pygame.transform.scale(ambulance_left,
+                                    (int(ambulance_left.get_width() * 2*scale), int(ambulance_left.get_height() * 2*scale)))
+ambulance_right = pygame.transform.scale(ambulance_right,
+                                     (int(ambulance_right.get_width() * 2 * scale), int(ambulance_right.get_height() * 2 * scale)))
+ambulance_up = pygame.transform.scale(ambulance_up, (int(ambulance_up.get_width() * 2 * scale), int(ambulance_up.get_height() * 2 *scale)))
+
+
+
 traffic_light_green = pygame.transform.scale(traffic_light_green, (
     int(traffic_light_green.get_width() * scale_tl), int(traffic_light_green.get_height() * scale_tl)))
 traffic_light_red = pygame.transform.scale(traffic_light_red, (
@@ -181,6 +192,8 @@ prev_mouse_pos = (0, 0)
 vehicle_types = ['bike', 'bus', 'car', 'truck']
 direction_dict = {'right': (0, 1), 'down': (1, 0), 'left': (0, -1), 'up': (-1, 0)}
 
+def dist(pos1, pos2):
+    return ((pos1[0] - pos2[0])**2 + (pos1[1] - pos2[1])**2)**0.5
 
 class Vehicle:
     def __init__(self, speed, traffic_light, type):
@@ -231,6 +244,9 @@ class Vehicle:
             self.set_traffic_light(traffic_light3)
         if self.traffic_light.color == 0 and direction == 0 and self.traffic_light.position[0] == self.position[0]:
             pass
+        if len(self.traffic_light.vehicles) > 1 and self.traffic_light.vehicles.index(self) != 0 and dist(self.get_position(),
+                                                                 self.traffic_light.vehicles[self.traffic_light.vehicles.index(self) - 1].get_position()) < 150:
+            pass
         elif self.traffic_light.color == 0 and direction == 1 and self.traffic_light.position[0] == self.position[
             0] + 50:
             pass
@@ -270,10 +286,10 @@ car13 = Vehicle(speed, traffic_light5, 3)
 car14 = Vehicle(speed, traffic_light8, 3)
 car15 = Vehicle(speed, traffic_light7, 3)
 car16 = Vehicle(speed, traffic_light8, 3)
-car17 = Vehicle(speed, traffic_light1, 4)
-car18 = Vehicle(speed, traffic_light2, 4)
-car19 = Vehicle(speed, traffic_light5, 4)
-car20 = Vehicle(speed, traffic_light4, 4)
+car17 = Vehicle(speed, traffic_light1, 1)
+car18 = Vehicle(speed, traffic_light2, 2)
+car19 = Vehicle(speed, traffic_light5, 2)
+car20 = Vehicle(speed, traffic_light4, 3)
 
 cars = [car1, car2, car3, car4, car5, car6, car7, car8, car9, car10,
         car11, car12, car13, car14, car15, car16, car17, car18, car19, car20]
