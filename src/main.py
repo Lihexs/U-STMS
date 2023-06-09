@@ -750,9 +750,9 @@ if __name__ == '__main__':
         for traffic_light in traffic_lights:
             traffic_light.update_time()
             if traffic_light.get_color() == 0:
-                win.blit(traffic_light_red, traffic_light.get_position())
+                win.blit(traffic_light_yellow, traffic_light.get_position())
             elif traffic_light.color == 2:
-                win.blit(traffic_light_green, traffic_light.get_position())
+                win.blit(traffic_light_yellow, traffic_light.get_position())
             elif traffic_light.color == 1:
                 win.blit(traffic_light_yellow, traffic_light.get_position())
         # blit the vehicles
