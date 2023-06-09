@@ -102,12 +102,12 @@ truck_up = pygame.transform.scale(truck_up, (int(truck_up.get_width() * scale), 
 
 
 ambulance_down = pygame.transform.scale(ambulance_down,
-                                    (int(ambulance_down.get_width() * 2*scale), int(ambulance_down.get_height() * 2*scale)))
+                                    (int(ambulance_down.get_width() *scale), int(ambulance_down.get_height() *scale)))
 ambulance_left = pygame.transform.scale(ambulance_left,
-                                    (int(ambulance_left.get_width() * 2*scale), int(ambulance_left.get_height() * 2*scale)))
+                                    (int(ambulance_left.get_width() *scale), int(ambulance_left.get_height() *scale)))
 ambulance_right = pygame.transform.scale(ambulance_right,
-                                     (int(ambulance_right.get_width() * 2 * scale), int(ambulance_right.get_height() * 2 * scale)))
-ambulance_up = pygame.transform.scale(ambulance_up, (int(ambulance_up.get_width() * 2 * scale), int(ambulance_up.get_height() * 2 *scale)))
+                                     (int(ambulance_right.get_width()  * scale), int(ambulance_right.get_height()  * scale)))
+ambulance_up = pygame.transform.scale(ambulance_up, (int(ambulance_up.get_width()  * scale), int(ambulance_up.get_height()  *scale)))
 
 
 
@@ -240,8 +240,10 @@ class Vehicle:
     def move(self, direction):
         if self.direction == 2 and self.traffic_light.position[1] > self.position[1]:
             self.set_traffic_light(traffic_light6)
+            traffic_light6.vehicles.append(self)
         if self.direction == 3 and self.traffic_light.position[1] < self.position[1]:
             self.set_traffic_light(traffic_light3)
+            traffic_light3.vehicles.append(self)
         if self.traffic_light.color == 0 and direction == 0 and self.traffic_light.position[0] == self.position[0]:
             pass
         if len(self.traffic_light.vehicles) > 1 and self.traffic_light.vehicles.index(self) != 0 and dist(self.get_position(),
@@ -264,7 +266,6 @@ class Vehicle:
         elif direction == 3:
             self.set_position((self.get_position()[0], self.get_position()[1] + self.get_speed()))
 
-
 # 0 - left, 1 - right, 2 - up, 3 - down
 
 # 0 - car, 1 - bus, 2 - truck, 3 - bike, 4 - ambulance
@@ -285,11 +286,11 @@ car12 = Vehicle(speed, traffic_light4, 2)
 car13 = Vehicle(speed, traffic_light5, 3)
 car14 = Vehicle(speed, traffic_light8, 3)
 car15 = Vehicle(speed, traffic_light7, 3)
-car16 = Vehicle(speed, traffic_light8, 3)
-car17 = Vehicle(speed, traffic_light1, 1)
-car18 = Vehicle(speed, traffic_light2, 2)
-car19 = Vehicle(speed, traffic_light5, 2)
-car20 = Vehicle(speed, traffic_light4, 3)
+car16 = Vehicle(speed, traffic_light8, 4)
+car17 = Vehicle(speed, traffic_light1, 4)
+car18 = Vehicle(speed, traffic_light2, 4)
+car19 = Vehicle(speed, traffic_light5, 4)
+car20 = Vehicle(speed, traffic_light4, 4)
 
 cars = [car1, car2, car3, car4, car5, car6, car7, car8, car9, car10,
         car11, car12, car13, car14, car15, car16, car17, car18, car19, car20]
@@ -698,6 +699,52 @@ if __name__ == '__main__':
             prev_mouse_pos = mouse_pos
 
         win.blit(world.subsurface(camera), (0, 0))
+
+        # check if any vehicle has reached the end of the road, if so, move it to a random traffic light
+        # dont forget to change its position, direction and relevant traffic light
+        for vehicle in cars:
+            if vehicle.get_position()[0] < -100 or vehicle.get_position()[0] > 1650 or vehicle.get_position()[
+                1] < -100 or vehicle.get_position()[1] > 1100:
+                vehicle.traffic_light.vehicles.remove(vehicle)
+                choice = random.randint(1, 8)
+                if choice == 3 or choice == 6:
+                    choice += 1
+
+                if choice == 1:
+                    vehicle.set_traffic_light(traffic_light1)
+                    traffic_light1.vehicles.append(vehicle)
+                    vehicle.set_position(traffic_light1.get_starting_coords())
+                    vehicle.set_direction(traffic_light1.get_arrival_direction())
+
+                elif choice == 2:
+                    vehicle.set_traffic_light(traffic_light2)
+                    traffic_light2.vehicles.append(vehicle)
+                    vehicle.set_position(traffic_light2.get_starting_coords())
+                    vehicle.set_direction(traffic_light2.get_arrival_direction())
+
+                elif choice == 4:
+                    vehicle.set_traffic_light(traffic_light4)
+                    traffic_light4.vehicles.append(vehicle)
+                    vehicle.set_position(traffic_light4.get_starting_coords())
+                    vehicle.set_direction(traffic_light4.get_arrival_direction())
+
+                elif choice == 5:
+                    vehicle.set_traffic_light(traffic_light5)
+                    traffic_light5.vehicles.append(vehicle)
+                    vehicle.set_position(traffic_light5.get_starting_coords())
+                    vehicle.set_direction(traffic_light5.get_arrival_direction())
+
+                elif choice == 7:
+                    vehicle.set_traffic_light(traffic_light7)
+                    traffic_light7.vehicles.append(vehicle)
+                    vehicle.set_position(traffic_light7.get_starting_coords())
+                    vehicle.set_direction(traffic_light7.get_arrival_direction())
+
+                elif choice == 8:
+                    vehicle.set_traffic_light(traffic_light8)
+                    traffic_light8.vehicles.append(vehicle)
+                    vehicle.set_position(traffic_light8.get_starting_coords())
+                    vehicle.set_direction(traffic_light8.get_arrival_direction())
 
         # blit the traffic lights
         for traffic_light in traffic_lights:
