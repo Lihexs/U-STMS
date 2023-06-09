@@ -217,18 +217,27 @@ class Vehicle:
     def set_direction(self, direction):
         self.direction = direction
 
+    def set_traffic_light(self, traffic_light11):
+        self.traffic_light = traffic_light11
+
+
     # 0 - left, 1 - right, 2 - up, 3 - down
     # 0 - red, 1 - yellow, 2 - green
 
     def move(self, direction):
-        if self.traffic_light.color == 0 and (
-                abs(self.traffic_light.get_position()[0] - self.get_position()[0] == 0) or (
-                abs(self.traffic_light.get_position()[1] - self.get_position()[1]) == 0)):
+        if self.direction == 2 and self.traffic_light.position[1] > self.position[1]:
+            self.set_traffic_light(traffic_light6)
+        if self.direction == 3 and self.traffic_light.position[1] < self.position[1]:
+            self.set_traffic_light(traffic_light3)
+        if self.traffic_light.color == 0 and direction == 0 and self.traffic_light.position[0] == self.position[0]:
             pass
-        elif abs(self.get_position()[0] + buffer_size) - abs(self.traffic_light.vehicles.index(self)) == 0 or abs(
-                self.get_position()[1] + buffer_size) - abs(self.traffic_light.vehicles.index(self)) == 0:
+        elif self.traffic_light.color == 0 and direction == 1 and self.traffic_light.position[0] == self.position[
+            0] + 50:
             pass
-        elif self.traffic_light.color == 0:
+        elif self.traffic_light.color == 0 and direction == 2 and self.traffic_light.position[1] == self.position[1]:
+            pass
+        elif self.traffic_light.color == 0 and direction == 3 and self.traffic_light.position[1] == self.position[
+            1] + 25:
             pass
         elif direction == 0:
             self.set_position((self.get_position()[0] - self.get_speed(), self.get_position()[1]))
@@ -247,23 +256,23 @@ class Vehicle:
 
 car1 = Vehicle(speed, traffic_light1, 0)
 car2 = Vehicle(speed, traffic_light2, 0)
-car3 = Vehicle(speed, traffic_light3, 0)
+car3 = Vehicle(speed, traffic_light4, 0)
 car4 = Vehicle(speed, traffic_light4, 0)
 car5 = Vehicle(speed, traffic_light5, 1)
-car6 = Vehicle(speed, traffic_light6, 1)
+car6 = Vehicle(speed, traffic_light2, 1)
 car7 = Vehicle(speed, traffic_light7, 1)
 car8 = Vehicle(speed, traffic_light8, 1)
 car9 = Vehicle(speed, traffic_light1, 2)
 car10 = Vehicle(speed, traffic_light2, 2)
-car11 = Vehicle(speed, traffic_light3, 2)
+car11 = Vehicle(speed, traffic_light1, 2)
 car12 = Vehicle(speed, traffic_light4, 2)
 car13 = Vehicle(speed, traffic_light5, 3)
-car14 = Vehicle(speed, traffic_light6, 3)
+car14 = Vehicle(speed, traffic_light8, 3)
 car15 = Vehicle(speed, traffic_light7, 3)
 car16 = Vehicle(speed, traffic_light8, 3)
 car17 = Vehicle(speed, traffic_light1, 4)
 car18 = Vehicle(speed, traffic_light2, 4)
-car19 = Vehicle(speed, traffic_light3, 4)
+car19 = Vehicle(speed, traffic_light5, 4)
 car20 = Vehicle(speed, traffic_light4, 4)
 
 cars = [car1, car2, car3, car4, car5, car6, car7, car8, car9, car10,
@@ -607,12 +616,10 @@ if __name__ == '__main__':
             }
         }
 
+        for traffic_light in traffic_lights:
+            traffic_light.set_color(0)
+
         dou1, dou2 = evaluate(traffic_lights_info_orig)
-        # for traffic_light in traffic_lights:
-        #     if traffic_light == dou1 or traffic_light == dou2:
-        #         traffic_light.set_color(2)
-        #         traffic_light.reset_time()
-        #     traffic_light.update_time()
 
         for tl in dou1:
             if tl == 'tls1':
@@ -678,6 +685,7 @@ if __name__ == '__main__':
 
         # blit the traffic lights
         for traffic_light in traffic_lights:
+            traffic_light.update_time()
             if traffic_light.get_color() == 0:
                 win.blit(traffic_light_red, traffic_light.get_position())
             elif traffic_light.color == 2:
@@ -733,5 +741,58 @@ if __name__ == '__main__':
                 win.blit(ambulance_up, car.get_position())
             elif car.type == 4 and car.get_direction() == 3:
                 win.blit(ambulance_down, car.get_position())
+
+        # 0 - red, 1 - yellow, 2 - green
+
+        # rand_change_traffic_light = random.randint(0, 1000)
+        # if rand_change_traffic_light == 0:
+        #     traffic_light1.set_color(2)
+        #     traffic_light1.reset_time()
+        # elif rand_change_traffic_light == 1:
+        #     traffic_light1.set_color(0)
+        #
+        # rand_change_traffic_light = random.randint(0, 1000)
+        # if rand_change_traffic_light == 0:
+        #     traffic_light2.set_color(2)
+        #     traffic_light2.reset_time()
+        # elif rand_change_traffic_light == 1:
+        #     traffic_light3.set_color(0)
+        #
+        # rand_change_traffic_light = random.randint(0, 1000)
+        # if rand_change_traffic_light == 0:
+        #     traffic_light4.set_color(2)
+        #     traffic_light4.reset_time()
+        # elif rand_change_traffic_light == 1:
+        #     traffic_light4.set_color(0)
+        #
+        # rand_change_traffic_light = random.randint(0, 1000)
+        # if rand_change_traffic_light == 0:
+        #     traffic_light5.set_color(2)
+        #     traffic_light5.reset_time()
+        # elif rand_change_traffic_light == 1:
+        #     traffic_light5.set_color(0)
+        #
+        # rand_change_traffic_light = random.randint(0, 1000)
+        # if rand_change_traffic_light == 0:
+        #     traffic_light6.set_color(2)
+        #     traffic_light6.reset_time()
+        # elif rand_change_traffic_light == 1:
+        #     traffic_light6.set_color(0)
+        #
+        # rand_change_traffic_light = random.randint(0, 1000)
+        # if rand_change_traffic_light == 0:
+        #     traffic_light7.set_color(2)
+        #     traffic_light7.reset_time()
+        # elif rand_change_traffic_light == 1:
+        #     traffic_light7.set_color(0)
+        #
+        # rand_change_traffic_light = random.randint(0, 1000)
+        # if rand_change_traffic_light == 0:
+        #     traffic_light8.set_color(2)
+        #     traffic_light8.reset_time()
+        # elif rand_change_traffic_light == 1:
+        #     traffic_light8.set_color(0)
+
+
 
         pygame.display.flip()
