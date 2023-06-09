@@ -51,6 +51,15 @@ car_left = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file
 car_right = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Vehicles', 'right', 'car.png'))
 car_up = pygame.image.load(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Vehicles', 'up', 'car.png'))
 
+ambulance_down = pygame.image.load(
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Vehicles', 'down', 'ambulance.png'))
+ambulance_left = pygame.image.load(
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Vehicles', 'left', 'ambulance.png'))
+ambulance_right = pygame.image.load(
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Vehicles', 'right', 'ambulance.png'))
+ambulance_up = pygame.image.load(
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Vehicles', 'up', 'ambulance.png'))
+
 truck_down = pygame.image.load(
     os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Vehicles', 'down', 'truck.png'))
 truck_left = pygame.image.load(
@@ -107,7 +116,7 @@ class Traffic_Light:
         self.arrival_direction = arrival_direction
         self.starting_coords = starting_coords
         self.time = 0
-        self.vehicles = [] # Vehicle list of the traffic light lane
+        self.vehicles = []  # Vehicle list of the traffic light lane
 
     def add_vehicle(self, vehicle):
         self.vehicles.append(vehicle)
@@ -148,10 +157,10 @@ class Traffic_Light:
 # 0 - left, 1 - right, 2 - up, 3 - down
 traffic_light1 = Traffic_Light((945, 70), 0, 3, (994, -50))
 traffic_light2 = Traffic_Light((945, 290), 0, 1, (-50, 230))
-traffic_light3 = Traffic_Light((945, 450), 0, 3, None)
+traffic_light3 = Traffic_Light((945, 450), 0, 3, (0,0))
 traffic_light4 = Traffic_Light((945, 670), 0, 1, (-50, 602))
 traffic_light5 = Traffic_Light((1130, 75), 0, 0, (1570, 173))
-traffic_light6 = Traffic_Light((1130, 295), 0, 2, None)
+traffic_light6 = Traffic_Light((1130, 295), 0, 2, (0,0))
 traffic_light7 = Traffic_Light((1130, 450), 0, 0, (1570, 544))
 traffic_light8 = Traffic_Light((1130, 670), 0, 2, (1076, 1000))
 
@@ -181,6 +190,7 @@ class Vehicle:
             self.passengers = random.randint(0, 50)
         self.type = type
         self.speed = speed
+        self.position = traffic_light.get_starting_coords()
         self.direction = traffic_light.arrival_direction
         self.traffic_light = traffic_light
         traffic_light.add_vehicle(self)
@@ -201,44 +211,37 @@ class Vehicle:
     def set_position(self, position):
         self.position = position
 
-    def set_speed(self, speed):
-        self.speed = speed
+    def set_speed(self, speed1):
+        self.speed = speed1
 
     def set_direction(self, direction):
         self.direction = direction
 
-    def move(self, direction):
-        if (direction == 'right' or direction == 'left') and self.traffic_light.color == 0 and abs(self.traffic_light.get_position()[1] - self.get_position()[1] < 1):
-            self.stopped = True
-        if direction == 'up' and self.traffic_light.color == 0 and abs(self.traffic_light.get_position())
-        if direction == 'right':
-            position_x = self.get_position()[0] + speed
-            position_y = self.get_position()[1]
-            position = (position_x, position_y)
-            self.set_position(position)
-        elif direction == 'down':
-            position_x = self.get_position()[0]
-            position_y = self.get_position()[1] + speed
-            position = (position_x, position_y)
-            self.set_position(position)
-        elif direction == 'left':
-            position_x = self.get_position()[0] - speed
-            position_y = self.get_position()[1]
-            position = (position_x, position_y)
-            self.set_position(position)
-        elif direction == 'up':
-            position_x = self.get_position()[0]
-            position_y = self.get_position()[1] - speed
-            position = (position_x, position_y)
-            self.set_position(position)
+    # 0 - left, 1 - right, 2 - up, 3 - down
+    # 0 - red, 1 - yellow, 2 - green
 
-    def within_buffer_move(self, buffer_size):
-        dist = ((self.position[0] - traffic_light.get_position()[0]) ** 2 + (
-                self.position[0] - traffic_light.get_position()[1]) ** 2) ** 0.5
-        return dist <= buffer_size
+    def move(self, direction):
+        if self.traffic_light.color == 0 and traffic_light.position is not None and (
+                abs(self.traffic_light.get_position()[0] - self.get_position()[0] == 0) or (
+                abs(self.traffic_light.get_position()[1] - self.get_position()[1]) == 0)):
+            pass
+        elif abs(self.get_position()[0] + buffer_size) - abs(self.traffic_light.vehicles.index(self)) == 0 or abs(
+                self.get_position()[1] + buffer_size) - abs(self.traffic_light.vehicles.index(self)) == 0:
+            pass
+        elif self.traffic_light.color == 0:
+            pass
+        elif direction == 0:
+            self.set_position((self.get_position()[0] - self.get_speed(), self.get_position()[1]))
+        elif direction == 1:
+            self.set_position((self.get_position()[0] + self.get_speed(), self.get_position()[1]))
+        elif direction == 2:
+            self.set_position((self.get_position()[0], self.get_position()[1] - self.get_speed()))
+        elif direction == 3:
+            self.set_position((self.get_position()[0], self.get_position()[1] + self.get_speed()))
 
 
 # 0 - left, 1 - right, 2 - up, 3 - down
+
 # 0 - car, 1 - bus, 2 - truck, 3 - bike, 4 - ambulance
 
 
@@ -263,6 +266,180 @@ car18 = Vehicle(speed, traffic_light2, 4)
 car19 = Vehicle(speed, traffic_light3, 4)
 car20 = Vehicle(speed, traffic_light4, 4)
 
+cars = [car1, car2, car3, car4, car5, car6, car7, car8, car9, car10,
+        car11, car12, car13, car14, car15, car16, car17, car18, car19, car20]
+
+action_1_1 = {
+    'green': ['tls6'],
+    'red': ['tls2', 'tls1', 'tls5']
+}
+
+action_1_2 = {
+    'green': ['tls5'],
+    'red': ['tls6', 'tls2', 'tls1']
+}
+
+action_1_3 = {
+    'green': ['tls2'],
+    'red': ['tls1', 'tls5', 'tls6']
+}
+
+action_1_4 = {
+    'green': ['tls1'],
+    'red': ['tls2', 'tls5', 'tls6']
+}
+
+action_1_5 = {
+    'green': ['tls6', 'tls1'],
+    'red': ['tls2', 'tls5']
+}
+
+action_1_6 = {
+    'green': ['tls5', 'tls2'],
+    'red': ['tls6', 'tls1']
+}
+action_2_1 = {
+    'green': ['tls7'],
+    'red': ['tls3', 'tls4', 'tls8']
+}
+
+action_2_2 = {
+    'green': ['tls8'],
+    'red': ['tls7', 'tls3', 'tls4']
+}
+
+action_2_3 = {
+    'green': ['tls3'],
+    'red': ['tls4', 'tls8', 'tls7']
+}
+
+action_2_4 = {
+    'green': ['tls4'],
+    'red': ['tls3', 'tls8', 'tls7']
+}
+
+action_2_5 = {
+    'green': ['tls7', 'tls4'],
+    'red': ['tls3', 'tls8']
+}
+
+action_2_6 = {
+    'green': ['tls8', 'tls3'],
+    'red': ['tls7', 'tls4']
+}
+
+traffic_lights_1 = {
+    "tls1": {
+        "num_cars": 10,
+        "num_buses": 2,
+        "num_of_passengers": 30,
+        "num_ambulances": 0,
+        "waiting": 1,
+        "is_green": 0
+    },
+    "tls2": {
+        "num_cars": 5,
+        "num_buses": 1,
+        "num_of_passengers": 20,
+        "num_ambulances": 0,
+        "waiting": 0,
+        "is_green": 0
+    },
+    "tls3": {
+        "num_cars": 8,
+        "num_buses": 0,
+        "num_of_passengers": 15,
+        "num_ambulances": 1,
+        "waiting": 2,
+        "is_green": 1
+    },
+    "tls4": {
+        "num_cars": 5,
+        "num_buses": 1,
+        "num_of_passengers": 20,
+        "num_ambulances": 0,
+        "waiting": 0,
+        "is_green": 1
+    },
+    "tls5": {
+        "num_cars": 3,
+        "num_buses": 0,
+        "num_of_passengers": 10,
+        "num_ambulances": 0,
+        "waiting": 1,
+        "is_green": 0
+    },
+    "tls6": {
+        "num_cars": 6,
+        "num_buses": 2,
+        "num_of_passengers": 25,
+        "num_ambulances": 1,
+        "waiting": 0,
+        "is_green": 0
+    },
+    "tls7": {
+        "num_cars": 2,
+        "num_buses": 0,
+        "num_of_passengers": 5,
+        "num_ambulances": 0,
+        "waiting": 0,
+        "is_green": 0
+    },
+    "tls8": {
+        "num_cars": 7,
+        "num_buses": 1,
+        "num_of_passengers": 18,
+        "num_ambulances": 0,
+        "waiting": 2,
+        "is_green": 1
+    }
+}
+
+
+def evaluate(traffic_lights_info):
+    # Constants to weigh the importance of different factors
+    CAR_WEIGHT = 1
+    BUS_WEIGHT = 15
+    AMBULANCE_WEIGHT = 1000
+    WAITING_BONUS = 0.5
+    GREEN__PENALTY = 10
+
+    # Calculate the current "congestion" and "waiting" scores for each direction
+    scores = {direction: (CAR_WEIGHT * counts['num_cars'] +
+                          BUS_WEIGHT * counts['num_buses'] + counts['num_of_passengers'] / 2 +
+                          AMBULANCE_WEIGHT * counts['num_ambulances'] +
+                          WAITING_BONUS * (counts['waiting'] +
+                                           GREEN__PENALTY * counts['is_green'])) for direction, counts in
+              traffic_lights_info.items()}
+
+    # Split scores into 2 intersections
+    intersaction1 = {key: value for key, value in scores.items() if key in ['tls1', 'tls2', 'tls5', 'tls6']}
+    intersaction2 = {key: value for key, value in scores.items() if key in ['tls3', 'tls4', 'tls7', 'tls8']}
+
+    # Find the key with the max value in each intersection
+    max_key_inter1 = max(intersaction1, key=intersaction1.get)
+    max_key_inter2 = max(intersaction2, key=intersaction2.get)
+
+    # Find the max sum of pair values in each intersection
+    if intersaction1['tls1'] + intersaction1['tls6'] > intersaction1['tls2'] + intersaction1['tls5']:
+        max_key_duoes1 = ('tls1', 'tls6')
+    else:
+        max_key_duoes1 = ('tls2', 'tls5')
+
+    if intersaction2['tls3'] + intersaction2['tls8'] > intersaction2['tls4'] + intersaction2['tls7']:
+        max_key_duoes2 = ('tls3', 'tls8')
+    else:
+        max_key_duoes2 = ('tls4', 'tls7')
+
+    duoes1 = (max_key_duoes1, max_key_inter1)
+    duoes2 = (max_key_duoes2, max_key_inter2)
+
+    chosen_interation1 = random.choice(duoes1)
+    chosen_interation2 = random.choice(duoes2)
+
+    return chosen_interation1, chosen_interation2
+
+
 if __name__ == '__main__':
     running = True
     while running:
@@ -283,6 +460,161 @@ if __name__ == '__main__':
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     dragging = False
+        num_of_ambluances1 = 0
+        num_of_bus1 = 0
+        num_of_passengers1 = 0
+        for vehicle in traffic_light1.vehicles:
+            if vehicle.type == 4:
+                num_of_ambluances1 += 1
+            if vehicle.type == 1:
+                num_of_bus1 += 1
+                num_of_passengers1 += vehicle.passengers
+
+        num_of_ambluances2 = 0
+        num_of_bus2 = 0
+        num_of_passengers2 = 0
+        for vehicle in traffic_light2.vehicles:
+            if vehicle.type == 4:
+                num_of_ambluances2 += 1
+            if vehicle.type == 1:
+                num_of_bus2 += 1
+                num_of_passengers2 += vehicle.passengers
+
+        num_of_ambluances3 = 0
+        num_of_bus3 = 0
+        num_of_passengers3 = 0
+        for vehicle in traffic_light3.vehicles:
+            if vehicle.type == 4:
+                num_of_ambluances3 += 1
+            if vehicle.type == 1:
+                num_of_bus3 += 1
+                num_of_passengers3 += vehicle.passengers
+
+        num_of_ambluances4 = 0
+        num_of_bus4 = 0
+        num_of_passengers4 = 0
+        for vehicle in traffic_light4.vehicles:
+            if vehicle.type == 4:
+                num_of_ambluances4 += 1
+            if vehicle.type == 1:
+                num_of_bus4 += 1
+                num_of_passengers4 += vehicle.passengers
+
+        num_of_ambluances5 = 0
+        num_of_bus5 = 0
+        num_of_passengers5 = 0
+        for vehicle in traffic_light5.vehicles:
+            if vehicle.type == 4:
+                num_of_ambluances5 += 1
+            if vehicle.type == 1:
+                num_of_bus5 += 1
+                num_of_passengers5 += vehicle.passengers
+
+        num_of_ambluances6 = 0
+        num_of_bus6 = 0
+        num_of_passengers6 = 0
+        for vehicle in traffic_light6.vehicles:
+            if vehicle.type == 4:
+                num_of_ambluances6 += 1
+            if vehicle.type == 1:
+                num_of_bus6 += 1
+                num_of_passengers6 += vehicle.passengers
+
+        num_of_ambluances7 = 0
+        num_of_bus7 = 0
+        num_of_passengers7 = 0
+        for vehicle in traffic_light7.vehicles:
+            if vehicle.type == 4:
+                num_of_ambluances7 += 1
+            if vehicle.type == 1:
+                num_of_bus7 += 1
+                num_of_passengers7 += vehicle.passengers
+
+        num_of_ambluances8 = 0
+        num_of_bus8 = 0
+        num_of_passengers8 = 0
+        for vehicle in traffic_light8.vehicles:
+            if vehicle.type == 4:
+                num_of_ambluances8 += 1
+            if vehicle.type == 1:
+                num_of_bus8 += 1
+                num_of_passengers8 += vehicle.passengers
+
+        traffic_lights_info_orig = {
+            "tls1": {
+                "num_cars": len(traffic_light1.vehicles),
+                "num_buses": num_of_bus1,
+                "num_of_passengers": num_of_passengers1,
+                "num_ambulances": num_of_ambluances1,
+                "waiting": traffic_light1.get_time(),
+                "is_green": 0 if traffic_light1.get_color() == 2 else 1
+            },
+            "tls2": {
+                "num_cars": len(traffic_light2.vehicles),
+                "num_buses": num_of_bus2,
+                "num_of_passengers": num_of_passengers2,
+                "num_ambulances": num_of_ambluances2,
+                "waiting": traffic_light2.get_time(),
+                "is_green": 0 if traffic_light2.get_color() == 2 else 1
+            },
+            "tls3": {
+                "num_cars": len(traffic_light3.vehicles),
+                "num_buses": num_of_bus3,
+                "num_of_passengers": num_of_passengers3,
+                "num_ambulances": num_of_ambluances3,
+                "waiting": traffic_light3.get_time(),
+                "is_green": 0 if traffic_light3.get_color() == 2 else 1
+            },
+            "tls4": {
+                "num_cars": len(traffic_light4.vehicles),
+                "num_buses": num_of_bus4,
+                "num_of_passengers": num_of_passengers4,
+                "num_ambulances": num_of_ambluances4,
+                "waiting": traffic_light4.get_time(),
+                "is_green": 0 if traffic_light4.get_color() == 2 else 1
+            },
+            "tls5": {
+                "num_cars": len(traffic_light5.vehicles),
+                "num_buses": num_of_bus5,
+                "num_of_passengers": num_of_passengers5,
+                "num_ambulances": num_of_ambluances5,
+                "waiting": traffic_light5.get_time(),
+                "is_green": 0 if traffic_light5.get_color() == 2 else 1
+            },
+            "tls6": {
+                "num_cars": len(traffic_light6.vehicles),
+                "num_buses": num_of_bus6,
+                "num_of_passengers": num_of_passengers6,
+                "num_ambulances": num_of_ambluances6,
+                "waiting": traffic_light6.get_time(),
+                "is_green": 0 if traffic_light6.get_color() == 2 else 1
+            },
+            "tls7": {
+                "num_cars": len(traffic_light7.vehicles),
+                "num_buses": num_of_bus7,
+                "num_of_passengers": num_of_passengers7,
+                "num_ambulances": num_of_ambluances7,
+                "waiting": traffic_light7.get_time(),
+                "is_green": 0 if traffic_light7.get_color() == 2 else 1
+            },
+            "tls8": {
+                "num_cars": len(traffic_light8.vehicles),
+                "num_buses": num_of_bus8,
+                "num_of_passengers": num_of_passengers8,
+                "num_ambulances": num_of_ambluances8,
+                "waiting": traffic_light8.get_time(),
+                "is_green": 0 if traffic_light8.get_color() == 2 else 1
+            }
+        }
+
+        dou1, dou2 = evaluate(traffic_lights_info_orig)
+        for traffic_light in traffic_lights:
+            if traffic_light == dou1 or traffic_light == dou2:
+                traffic_light.set_color(2)
+                traffic_light.reset_time()
+            traffic_light.update_time()
+        for vehicle in cars:
+            vehicle.move(vehicle.get_direction())
         if dragging:
             mouse_pos = pygame.mouse.get_pos()
             dx, dy = prev_mouse_pos[0] - mouse_pos[0], prev_mouse_pos[1] - mouse_pos[1]
@@ -303,5 +635,52 @@ if __name__ == '__main__':
         # blit the vehicles
         # for vehicle in vehicles:
         #     pass
+
+        # blit the cars
+        # 0 - left, 1 - right, 2 - up, 3 - down
+        # 0 - car, 1 - bus, 2 - truck, 3 - bike, 4 - ambulance
+
+        for car in cars:
+            if car.type == 0 and car.get_direction() == 0:
+               win.blit(car_left, car.get_position())
+            elif car.type == 0 and car.get_direction() == 1:
+                win.blit(car_right, car.get_position())
+            elif car.type == 0 and car.get_direction() == 2:
+                win.blit(car_up, car.get_position())
+            elif car.type == 0 and car.get_direction() == 3:
+                win.blit(car_down, car.get_position())
+            elif car.type == 1 and car.get_direction() == 0:
+                win.blit(bus_left, car.get_position())
+            elif car.type == 1 and car.get_direction() == 1:
+                win.blit(bus_right, car.get_position())
+            elif car.type == 1 and car.get_direction() == 2:
+                win.blit(bus_up, car.get_position())
+            elif car.type == 1 and car.get_direction() == 3:
+                win.blit(bus_down, car.get_position())
+            elif car.type == 2 and car.get_direction() == 0:
+                win.blit(truck_left, car.get_position())
+            elif car.type == 2 and car.get_direction() == 1:
+                win.blit(truck_right, car.get_position())
+            elif car.type == 2 and car.get_direction() == 2:
+                win.blit(truck_up, car.get_position())
+            elif car.type == 2 and car.get_direction() == 3:
+                win.blit(truck_down, car.get_position())
+            elif car.type == 3 and car.get_direction() == 0:
+                win.blit(bike_left, car.get_position())
+            elif car.type == 3 and car.get_direction() == 1:
+                win.blit(bike_right, car.get_position())
+            elif car.type == 3 and car.get_direction() == 2:
+                win.blit(bike_up, car.get_position())
+            elif car.type == 3 and car.get_direction() == 3:
+                win.blit(bike_down, car.get_position())
+            elif car.type == 4 and car.get_direction() == 0:
+                win.blit(ambulance_left, car.get_position())
+            elif car.type == 4 and car.get_direction() == 1:
+                win.blit(ambulance_right, car.get_position())
+            elif car.type == 4 and car.get_direction() == 2:
+                win.blit(ambulance_up, car.get_position())
+            elif car.type == 4 and car.get_direction() == 3:
+                win.blit(ambulance_down, car.get_position())
+
 
         pygame.display.flip()
