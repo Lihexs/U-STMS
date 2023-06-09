@@ -11,7 +11,7 @@ pygame.init()
 scale = 1.5
 scale_tl = 0.85
 
-speed = 10
+speed = 1
 
 buffer_size = 5
 
@@ -157,10 +157,10 @@ class Traffic_Light:
 # 0 - left, 1 - right, 2 - up, 3 - down
 traffic_light1 = Traffic_Light((945, 70), 0, 3, (994, -50))
 traffic_light2 = Traffic_Light((945, 290), 0, 1, (-50, 230))
-traffic_light3 = Traffic_Light((945, 450), 0, 3, (0,0))
+traffic_light3 = Traffic_Light((945, 450), 0, 3, (0, 0))
 traffic_light4 = Traffic_Light((945, 670), 0, 1, (-50, 602))
 traffic_light5 = Traffic_Light((1130, 75), 0, 0, (1570, 173))
-traffic_light6 = Traffic_Light((1130, 295), 0, 2, (0,0))
+traffic_light6 = Traffic_Light((1130, 295), 0, 2, (0, 0))
 traffic_light7 = Traffic_Light((1130, 450), 0, 0, (1570, 544))
 traffic_light8 = Traffic_Light((1130, 670), 0, 2, (1076, 1000))
 
@@ -221,7 +221,7 @@ class Vehicle:
     # 0 - red, 1 - yellow, 2 - green
 
     def move(self, direction):
-        if self.traffic_light.color == 0 and traffic_light.position is not None and (
+        if self.traffic_light.color == 0 and (
                 abs(self.traffic_light.get_position()[0] - self.get_position()[0] == 0) or (
                 abs(self.traffic_light.get_position()[1] - self.get_position()[1]) == 0)):
             pass
@@ -608,11 +608,63 @@ if __name__ == '__main__':
         }
 
         dou1, dou2 = evaluate(traffic_lights_info_orig)
-        for traffic_light in traffic_lights:
-            if traffic_light == dou1 or traffic_light == dou2:
-                traffic_light.set_color(2)
-                traffic_light.reset_time()
-            traffic_light.update_time()
+        # for traffic_light in traffic_lights:
+        #     if traffic_light == dou1 or traffic_light == dou2:
+        #         traffic_light.set_color(2)
+        #         traffic_light.reset_time()
+        #     traffic_light.update_time()
+
+        for tl in dou1:
+            if tl == 'tls1':
+                traffic_light1.set_color(2)
+                traffic_light1.reset_time()
+            elif tl == 'tls2':
+                traffic_light2.set_color(2)
+                traffic_light2.reset_time()
+            elif tl == 'tls3':
+                traffic_light3.set_color(2)
+                traffic_light3.reset_time()
+            elif tl == 'tls4':
+                traffic_light4.set_color(2)
+                traffic_light4.reset_time()
+            elif tl == 'tls5':
+                traffic_light5.set_color(2)
+                traffic_light5.reset_time()
+            elif tl == 'tls6':
+                traffic_light6.set_color(2)
+                traffic_light6.reset_time()
+            elif tl == 'tls7':
+                traffic_light7.set_color(2)
+                traffic_light7.reset_time()
+            elif tl == 'tls8':
+                traffic_light8.set_color(2)
+                traffic_light8.reset_time()
+
+        for tl in dou2:
+            if tl == 'tls1':
+                traffic_light1.set_color(2)
+                traffic_light1.reset_time()
+            elif tl == 'tls2':
+                traffic_light2.set_color(2)
+                traffic_light2.reset_time()
+            elif tl == 'tls3':
+                traffic_light3.set_color(2)
+                traffic_light3.reset_time()
+            elif tl == 'tls4':
+                traffic_light4.set_color(2)
+                traffic_light4.reset_time()
+            elif tl == 'tls5':
+                traffic_light5.set_color(2)
+                traffic_light5.reset_time()
+            elif tl == 'tls6':
+                traffic_light6.set_color(2)
+                traffic_light6.reset_time()
+            elif tl == 'tls7':
+                traffic_light7.set_color(2)
+                traffic_light7.reset_time()
+            elif tl == 'tls8':
+                traffic_light8.set_color(2)
+                traffic_light8.reset_time()
         for vehicle in cars:
             vehicle.move(vehicle.get_direction())
         if dragging:
@@ -642,7 +694,7 @@ if __name__ == '__main__':
 
         for car in cars:
             if car.type == 0 and car.get_direction() == 0:
-               win.blit(car_left, car.get_position())
+                win.blit(car_left, car.get_position())
             elif car.type == 0 and car.get_direction() == 1:
                 win.blit(car_right, car.get_position())
             elif car.type == 0 and car.get_direction() == 2:
@@ -681,6 +733,5 @@ if __name__ == '__main__':
                 win.blit(ambulance_up, car.get_position())
             elif car.type == 4 and car.get_direction() == 3:
                 win.blit(ambulance_down, car.get_position())
-
 
         pygame.display.flip()
